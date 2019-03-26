@@ -4,6 +4,8 @@
  */
 
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 #include "badkan.hpp"
 #include "Tree.hpp"
 using std::cout, std::endl;
@@ -17,7 +19,8 @@ int main()
   threetree.insert(7);
   threetree.insert(3);
   
-  ariel::Tree mytree; 
+  ariel::Tree mytree;
+  ariel::Tree mytree2;
   mytree.insert(10);
   mytree.insert(3);
   mytree.insert(6);
@@ -71,8 +74,44 @@ int main()
 	  .CHECK_EQUAL(mytree.left(10), 6)
 	  .CHECK_EQUAL(mytree.contains(3), false)
 	  .CHECK_THROWS(mytree.remove(3))
+	  .CHECK_EQUAL(mytree.left(6), 2)
+	  .CHECK_EQUAL(mytree.right(6), 8)
+	  .CHECK_EQUAL(mytree.contains(11), false)
+	  .CHECK_THROWS(mytree.left(12))
+	  .CHECK_OK(mytree.insert(11))
+	  .CHECK_EQUAL(mytree.contains(11), true)
+	  .CHECK_EQUAL(mytree.parent(11), 12)
+	  .CHECK_EQUAL(mytree.contains(20), false)
+	  .CHECK_THROWS(mytree.right(20))
+	  .CHECK_OK(mytree.insert(20))
+	  .CHECK_EQUAL(mytree.contains(20), true)
+	  .CHECK_OK(mytree.right(18))
+	  .CHECK_EQUAL(mytree.right(18), 20)
+	  .CHECK_THROWS(mytree.left(18))
+	  .CHECK_EQUAL(mytree.size(), 10)
+	  .CHECK_OK(mytree.print())
+	  .print();
 
-	  .CHECK_OK(mytree.print());
+  srand((int)time(0));
+  for (int i = 0; i < 100; i++)
+  {
+	  int temp = (rand() % 100) + 1;
+	  tc.CHECK_EQUAL(mytree2.contains(temp), false);
+	  if (mytree2.contains(temp) == false)
+	  {
+		  mytree2.insert(temp);
+	  }
+	  tc.CHECK_EQUAL(mytree2.contains(temp), true);
+  }
+  for (int i = 0; i < 100; i++)
+  {
+	  int temp = (rand() % 100) + 1;
+	  if (mytree2.contains(temp) == true)
+	  {
+		  mytree2.remove(temp);
+	  }
+	  tc.CHECK_EQUAL(mytree2.contains(temp), false);
+  }
   
   cout << "You have " << tc.right() << " right answers and " << tc.wrong() << " wrong answers so your grade is " << tc.grade() << ". Great!" << endl;
 }

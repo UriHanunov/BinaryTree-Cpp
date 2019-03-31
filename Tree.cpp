@@ -1,7 +1,11 @@
+/**
+* this code based on https://gist.github.com/toboqus/def6a6915e4abd66e922 and https://gist.github.com/mopkaloppt/ebc5180d7b5fb01a20c8
+* @author Uri Hanunov
+*/
+
 #include "Tree.hpp"
 using namespace std;
 using namespace ariel;
-
 
 ariel::Tree::Tree()
 {
@@ -27,7 +31,7 @@ void ariel::Tree::insert(int key, node *leaf)
 {
 	if (key == leaf->value)
 	{
-		cout << "ERROR: this number is already in the tree" << endl;
+		throw "ERROR: this number is already in the tree";
 	}
 	else if (key < leaf->value)
 	{
@@ -85,7 +89,7 @@ Tree::node *ariel::Tree::search(int key, node *leaf)
 		{
 			return leaf;
 		}
-		if (key < leaf->value)
+		else if (key < leaf->value)
 		{
 			return search(key, leaf->left);
 		}
@@ -108,26 +112,15 @@ Tree::node *ariel::Tree::search(int key)
 
 bool ariel::Tree::contains(int key)
 {
-	Tree::node *leaf = root2;
-	while (leaf != NULL)
+	Tree::node *temp = search(key);
+	if (temp == NULL)
 	{
-		if (leaf != NULL)
-		{
-			if (key == leaf->value)
-			{
-				return true;
-			}
-			if (key < leaf->value)
-			{
-				*leaf = *leaf->left;
-			}
-			else
-			{
-				*leaf = *leaf->right;
-			}
-		}
+		return false;
 	}
-	return false;
+	else
+	{
+		return true;
+	}
 }
 
 void Tree::destroy_tree()
@@ -136,22 +129,42 @@ void Tree::destroy_tree()
 }
 
 
-void ariel::Tree::remove(int i)
+void ariel::Tree::remove(int key)
 {
-	bool temp = contains(i);
+	bool temp = contains(key);
 	if (temp == false)
 	{
-		cout << "ERROR: the number is not in the tree" << endl;
+		throw "ERROR: the number is not in the tree";
 	}
 	else
 	{
-
+		Tree::node *temp = search(key);
+		temp->parent->left = temp->left;
+		temp->parent->right = temp->right;
+		if (temp->left != NULL)
+		{
+			temp->left->parent = temp->parent;
+		}
+		if (temp->right != NULL)
+		{
+			temp->right->parent = temp->parent;
+		}
+		delete temp;
 	}
 }
+
+int ariel::Tree::size(node *leaf)
+{
+	if (leaf == NULL)
+	{
+		return 0;
+	}
+	return 1 + size(leaf->left) + size(leaf->right);
+}
+
 int ariel::Tree::size()
 {
-
-	return 0;
+	return size(root2);
 }
 
 
@@ -163,7 +176,7 @@ int ariel::Tree::root()
 	}
 	else
 	{
-		cout << "ERROR: there is no root to the tree" << endl;
+		throw "ERROR: there is no root to the tree";
 	}
 }
 
@@ -177,7 +190,7 @@ int ariel::Tree::parent(int i)
 	}
 	else
 	{
-		cout << "ERROR: this number is no in the tree" << endl;
+		throw "ERROR: this number is no in the tree";
 	}
 }
 
@@ -193,12 +206,12 @@ int ariel::Tree::left(int i)
 		}
 		else
 		{
-			cout << "ERROR: to this number there is not a left son" << endl;
+			throw "ERROR: to this number there is not a left son";
 		}
 	}
 	else
 	{
-		cout << "ERROR: this number is no in the tree" << endl;
+		throw "ERROR: this number is no in the tree";
 	}
 }
 
@@ -208,18 +221,18 @@ int ariel::Tree::right(int i)
 	Tree::node *temp = search(i);
 	if (temp != NULL)
 	{
-		if (temp->left != NULL)
+		if (temp->right != NULL)
 		{
-			return temp->left->value;
+			return temp->right->value;
 		}
 		else
 		{
-			cout << "ERROR: to this number there is not a left son" << endl;
+			throw "ERROR: to this number there is not a right son";
 		}
 	}
 	else
 	{
-		cout << "ERROR: this number is no in the tree" << endl;
+		throw "ERROR: this number is no in the tree";
 	}
 }
 

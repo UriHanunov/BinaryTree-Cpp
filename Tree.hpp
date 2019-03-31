@@ -32,6 +32,7 @@ namespace ariel
 		private:
 			node *root2;
 			void destroy_tree(node *leaf);
+			int size(node *leaf);
 			node *search(int key, node *leaf);
 			void insert(int key, node *leaf);
 			void inorder_print(node *leaf);

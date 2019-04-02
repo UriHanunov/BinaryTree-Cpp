@@ -10,6 +10,7 @@ using namespace ariel;
 ariel::Tree::Tree()
 {
 	root2 = NULL;
+	size_ = 0;
 }
 
 ariel::Tree::~Tree()
@@ -46,6 +47,7 @@ void ariel::Tree::insert(int key, node *leaf)
 			leaf->left->left = NULL;
 			leaf->left->right = NULL;
 			leaf->left->parent = leaf;
+			size_++;
 		}
 	}
 	else if (key > leaf->value)
@@ -61,6 +63,7 @@ void ariel::Tree::insert(int key, node *leaf)
 			leaf->right->right = NULL;
 			leaf->right->left = NULL;
 			leaf->right->parent = leaf;
+			size_++;
 		}
 	}
 }
@@ -78,6 +81,7 @@ void ariel::Tree::insert(int key)
 		root2->left = NULL;
 		root2->right = NULL;
 		root2->parent = NULL;
+		size_++;
 	}
 }
 
@@ -155,11 +159,12 @@ void ariel::Tree::remove(int key)
 
 int ariel::Tree::size(node *leaf)
 {
-	if (leaf == NULL)
-	{
-		return 0;
-	}
-	return 1 + size(leaf->left) + size(leaf->right);
+	return Tree::size_;
+	//if (leaf == NULL)
+	//{
+	//	return 0;
+	//}
+	//return 1 + size(leaf->left) + size(leaf->right);
 }
 
 int ariel::Tree::size()

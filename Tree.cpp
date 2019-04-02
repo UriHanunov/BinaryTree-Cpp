@@ -133,9 +133,97 @@ void Tree::destroy_tree()
 }
 
 
+
+void ariel::Tree::remove(node*& root2, int key)
+{
+
+	// find target node to delete
+	node* target = search(key);
+	if (!target) return;
+
+	// find parent of target
+	node* parent = target->parent;
+
+	// case 1: target is a leaf
+	if (target->left == NULL && target->right == NULL) {
+		// set parent's child pointer
+		if (parent != NULL) {
+			if (parent->left == target)
+				parent->left = NULL;
+			else
+				parent->right = NULL;
+		}
+		else
+			root2 = NULL;
+
+		// free target
+		delete target;
+		return;
+	}
+
+	// case 2: target has two children
+	else if (target->left != NULL && target->right != NULL) {
+		/**
+		 * THIS SECTION NEEDS TO BE IMPLEMENTED ********************
+		 *
+		 * Add the missing lines here to make the function complete. (Hint: To
+		 * remain a valid binary tree, you must replace 'target' with either
+		 * its predecessor or its successor. To make the lab more easy to test,
+		 * PLEASE USE THE PREDECESSOR.)
+		 */
+
+		 // Find predecessor
+		node* predec_node = target->left;
+
+		while (predec_node->right != NULL) {
+			predec_node = predec_node->right;
+		}
+
+		target->value = predec_node->value;
+		remove(target->left, predec_node->value);
+
+		return;
+
+	}
+
+	// case 3: target has only left child
+	else if (target->left != NULL) {
+		// set parent's child pointer
+		if (parent != NULL) {
+			if (parent->left == target)
+				parent->left = target->left;
+			else
+				parent->right = target->left;
+		}
+		else
+			root2 = target->left;
+
+		// free target
+		delete target;
+		return;
+	}
+
+	// case 4: target has only right child
+	else {
+		// set parent's child pointer
+		if (parent != NULL) {
+			if (parent->left == target)
+				parent->left = target->right;
+			else
+				parent->right = target->right;
+		}
+		else
+			root2 = target->right;
+
+		// free target
+		delete target;
+		return;
+	}
+}
 void ariel::Tree::remove(int key)
 {
-	bool temp = contains(key);
+	remove(root2, key);
+	/**bool temp = contains(key);
 	if (temp == false)
 	{
 		throw "ERROR: the number is not in the tree";
@@ -154,17 +242,12 @@ void ariel::Tree::remove(int key)
 			temp->right->parent = temp->parent;
 		}
 		delete temp;
-	}
+	}*/
 }
 
-int ariel::Tree::size(node *leaf)
+int ariel::Tree::size(node *leaf) /////check why 2
 {
 	return Tree::size_;
-	//if (leaf == NULL)
-	//{
-	//	return 0;
-	//}
-	//return 1 + size(leaf->left) + size(leaf->right);
 }
 
 int ariel::Tree::size()

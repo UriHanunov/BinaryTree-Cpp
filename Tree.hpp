@@ -37,6 +37,7 @@ namespace ariel
 			node *search(int key, node *leaf);
 			void insert(int key, node *leaf);
 			void inorder_print(node *leaf);
+			void remove(node*& root2, int key);
 
 	};
 	
